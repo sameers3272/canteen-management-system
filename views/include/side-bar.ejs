@@ -1,0 +1,50 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+        <li class="nav-item <%= path === '/'? 'active':''  %>">
+            <a class="nav-link " href="/">
+                <i class="mdi mdi-food-fork-drink menu-icon"></i>
+                <span class="menu-title">All Food Items</span>
+            </a>
+        </li>
+        <li class="nav-item <%= path === '/cart'? 'active':''  %>">
+            <a class="nav-link" href="/cart">
+                <i class="mdi mdi-cart-outline menu-icon"></i>
+                <span class="menu-title">Cart</span>
+            </a>
+        </li>
+        <li class="nav-item <%= path === '/orders'? 'active':''  %>">
+            <a class="nav-link " href="/orders">
+                <i class="mdi mdi-package-variant-closed menu-icon"></i>
+                <span class="menu-title">Orders</span>
+            </a>
+        </li>
+       <% if(admin){ %>
+        <li class="nav-item nav-category">Admin</li>
+        <li class="nav-item <%= path === '/admin/all-food'? 'active':''  %>">
+            <a class="nav-link " href="/admin/all-food">
+                <i class="mdi mdi-food-fork-drink menu-icon"></i>
+                <span class="menu-title">All Food Items</span>
+            </a>
+        </li>
+        <li class="nav-item <%= path === '/admin/add-food'? 'active':''  %>">
+            <a class="nav-link " href="/admin/add-food">
+                <i class="mdi mdi-library-plus menu-icon"></i>
+                <span class="menu-title">Add Food Items</span>
+            </a>
+        </li>
+        <% } %>
+        <li class="nav-item nav-category">Current</li>
+        <li class="nav-item">
+            <a class="nav-link ">
+                <form action="/logout" method="post">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                    <button type="submit" style="background: transparent;outline: none;border: none;">
+                        <i class="mdi mdi-logout-variant menu-icon"></i>
+                        <span class="menu-title">Logout</span>
+                    </button>
+                </form>
+            </a>
+        </li>
+
+    </ul>
+</nav>

@@ -1,0 +1,254 @@
+<%- include('../include/head.ejs') %>
+  </head>
+
+  <body>
+    <div class="container-scroller">
+
+      <%- include('../include/header.ejs');%>
+
+
+        <div class="container-fluid page-body-wrapper">
+
+          <%- include('../include/side-bar.ejs'); %>
+
+            <!-- main -->
+            <div class="main-panel">
+              <div class="content-wrapper">
+                <div class="row">
+
+                  <div class="tab-content tab-content-basic">
+
+                    <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">
+
+                      <div class="row">
+                        <div class="col-lg-12 grid-margin stretch-card">
+
+                          <div class="card">
+
+                            <div class="card-body">
+
+                              <div class="table-responsive">
+                                <% if(foods.length>0){%>
+                                  <table class="table table-bordered text-center" style=" border-collapse: collapse;">
+                                    <thead>
+                                      <tr>
+                                        <th class="d-small-none" style="width: 5%;">
+                                          #
+                                        </th>
+                                        <th style="width:50%;">
+                                          Title
+                                        </th>
+
+                                        <th style="width:10%;">
+                                          Quantity
+                                        </th>
+                                        <th style="width: 5%;">
+                                          <!-- Button trigger modal -->
+                                          <button type="button" class="btn btn-danger" data-toggle="modal"
+                                            data-target="#clear-cart">
+                                            Clear Cart
+                                          </button>
+
+                                          <!-- Modal -->
+                                          <div class="modal fade" id="clear-cart" tabindex="-1" role="dialog"
+                                            aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                  <h5 class="modal-title text-danger" id="exampleModalLongTitle">Do you
+                                                    want clear the cart..?</h5>
+                                                  <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true" style="font-size: 2rem;">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <!-- <div class="modal-body">
+                                                
+                                                </div> -->
+                                                <div class="modal-footer">
+                                                  <form action="/delete-cart" style="display: inline-block;"
+                                                    method="post">
+                                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                                                    <button type="submit" class="btn btn-danger">
+                                                      <div class="d-flex align-items-center">
+                                                        <span style="font-size: 1rem;">Clear All</span>
+                                                      </div>
+                                                    </button>
+                                                  </form>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+
+                                        </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <% foods.forEach((f,i)=>{ %>
+                                        <tr>
+                                          <td class="d-small-none">
+                                            <%= i+1 %>
+                                          </td>
+                                          <td>
+                                            <%= f.foodId.title%>
+                                          </td>
+
+
+                                          <td>
+                                            <%= f.quantity %>
+                                          </td>
+
+                                          <td>
+                                            <form action="/delete-cart-item/<%=f._id%>" style="display: inline-block;"
+                                              method="post">
+                                              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                                              <button type="submit" class="btn btn-danger">
+                                                <div class="d-flex align-items-center">
+                                                  <i class="mdi mdi-delete menu-icon" style="font-size: 1rem;"></i>
+                                                </div>
+                                              </button>
+                                            </form>
+                                          </td>
+                                        </tr>
+                                        <% }) %>
+
+                                    </tbody>
+                                  </table>
+                                  <% }else{ %>
+                                    <table class="table table-striped text-center">
+                                      <tr>
+                                        <td>
+                                          <h2>Cart is Empty</h2>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                    <% } %>
+                                      <% if(foods.length>0){%>
+                                        <!-- Button trigger modal -->
+                                        <div style="float: right;margin: 5px;">
+                                          <button type="button" class="btn btn-success" data-toggle="modal"
+                                            data-target="#order-now" style="padding: 15px 20px;">Continue...</button>
+
+                                        </div>
+
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="order-now" tabindex="-1" role="dialog"
+                                          aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <h3 class="modal-title text-secondary" id="exampleModalLongTitle">
+                                                  Summary
+                                                </h3>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                  aria-label="Close">
+                                                  <span aria-hidden="true" style="font-size: 2rem;">&times;</span>
+                                                </button>
+                                              </div>
+                                              <div class="modal-body p-3">
+                                                <div class="table-responsive">
+                                                  <table class="table table-bordered text-center"
+                                                    style="border-collapse: collapse;">
+                                                    <tr>
+                                                      <th style="width: 40%;">
+                                                        Food
+                                                      </th>
+                                                      <th style="width: 20%;">
+                                                        Quantity
+                                                      </th>
+                                                      <th style="width: 20%;">
+                                                        Price
+                                                      </th>
+                                                      <th style="width: 20%;">
+                                                        Line Total
+                                                      </th>
+                                                    </tr>
+
+                                                    <% foods.forEach((f,i)=>{ %>
+
+                                                      <tr>
+                                                        <td>
+                                                          <%= f.foodId.title%>
+                                                        </td>
+                                                        <td>
+                                                          <%= f.quantity %>
+                                                        </td>
+                                                        <td>
+                                                          <%= f.foodId.price%>
+                                                        </td>
+                                                        <td>
+                                                          <%= f.foodId.price*f.quantity %>
+                                                        </td>
+                                                      </tr>
+                                                      <% }) %>
+                                                        <tr>
+                                                          <th colspan="3">Total</th>
+                                                          <th>
+                                                            <%= total %>
+                                                          </th>
+                                                        </tr>
+                                                  </table>
+                                                </div>
+                                                <form action="/add-order" style="display: inline-block;" method="post">
+                                                  <div class="row mt-5">
+                                                    <h5 class="modal-title col-12" id="exampleModalLongTitle">
+                                                      Customer Details
+                                                    </h5>
+                                                    <div class="form-group col-6">
+                                                      <label for="cname"
+                                                        class="col-form-label col-form-label-sm">Name</label>
+                                                      <input type="text" class="form-control form-control-sm" id="cname"
+                                                        name="cname" placeholder="Sadat">
+                                                    </div>
+                                                    <div class="form-group col-6">
+                                                      <label for="cmobile_no"
+                                                        class="col-form-label col-form-label-sm">Mobile No</label>
+                                                      <input type="text" class="form-control form-control-sm"
+                                                        id="cmobile_no" name="cmobile_no" placeholder="Mobile No">
+                                                    </div>
+                                                  </div>
+                                              </div>
+                                              <div class="modal-footer">
+                                                <input type="hidden" name="totalPrice" value="<%= total%>">
+                                                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                                                <button type="submit" class="btn btn-success">
+                                                  <div class="d-flex align-items-center">
+                                                    <span style="font-size: 1rem;">Order Now</span>
+                                                  </div>
+                                                </button>
+
+                                              </div>
+                                              </form>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <% } %>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- content-wrapper ends -->
+
+    <%- include('../include/footer.ejs'); %>
+      <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+      </div>
+      <!-- container-scroller -->
+
+
+      <%- include('../include/end.ejs');%>

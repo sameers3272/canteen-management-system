@@ -1,0 +1,2 @@
+require("dotenv").config();
+module.exports = MONGODB_URI = `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@shop-shard-00-00.mhlr7.mongodb.net:27017,shop-shard-00-01.mhlr7.mongodb.net:27017,shop-shard-00-02.mhlr7.mongodb.net:27017/${process.env.MONGODB_DATABASE}?ssl=true&replicaSet=atlas-ws64yk-shard-0&authSource=admin&retryWrites=true&w=majority`;

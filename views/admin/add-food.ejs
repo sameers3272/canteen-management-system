@@ -1,0 +1,87 @@
+<%- include('../include/head.ejs') %>
+  </head>
+
+  <body>
+    <div class="container-scroller">
+
+      <%- include('../include/header.ejs');%>
+
+
+        <div class="container-fluid page-body-wrapper">
+
+          <%- include('../include/side-bar.ejs'); %>
+
+            <!-- main -->
+            <div class="main-panel">
+              <div class="content-wrapper">
+                <div class="row">
+
+                  <div class="col-md-8 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">
+                          <% if(editing){ %>Edit Food Item<% } else { %>Add Food Item<% } %>
+                        </h4>
+                        <% if (errorMessage) { %>
+                          <div class="user-message user-message--error w-100 my-2" style="font-weight: 700;" >
+                            <%= errorMessage %>
+                          </div>
+                          <% } %>
+                        <form class="forms-sample row"
+                          action="/admin/<% if(editing){ %>edit-food<% } else {  %>add-food<% } %> " method="post"
+                          enctype="multipart/form-data" novalidate>
+                          <div class="form-group col-md-6">
+                            <label for="title">Title</label>
+                            <input type="text" name="title" value="<% if(editing){ %><%= oldData.title %><% } %>"
+                              class="form-control <%= errors.find(e=>e.param === 'title') ? 'invalid' : '' %>" id="title" placeholder="Burger">
+                          </div>
+
+                          <div class="form-group col-md-6">
+                            <label for="price">Price</label>
+                            <input type="number" value="<% if(editing){ %><%= oldData.price %><% } %>" step="0.01"
+                              class="form-control <%= errors.find(e=>e.param === 'price') ? 'invalid' : '' %>" name="price" id="price" placeholder="99.98">
+                          </div>
+                          <div class="form-group col-md-12">
+                            <label for="image">Image</label>
+                            <input type="file" class="form-control" name="image" id="image">
+                          </div>
+                          <div class="form-group col-md-12">
+                            <label for="description">Description</label>
+                            <textarea class="form-control <%= errors.find(e=>e.param === 'description') ? 'invalid' : '' %>" id="description" name="description"
+                              rows="5"><% if(editing){ %><%= oldData.description %><% } %></textarea>
+                          </div>
+                          <% if(editing){ %>
+                            <input type="hidden" name="foodId" value="<%= oldData._id %>" />
+                            <% } %>
+                              <div class="col-md-12 d-flex" >
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+                                <button type="submit" class="btn btn-primary me-2">
+                                  <% if(editing) { %>Update Food<% } else { %>Add Food<% } %>
+                                </button>
+
+                              </div>
+
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- content-wrapper ends -->
+
+    <%- include('../include/footer.ejs'); %>
+      <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+      </div>
+      <!-- container-scroller -->
+
+
+      <%- include('../include/end.ejs');%>
