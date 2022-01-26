@@ -5,18 +5,14 @@ const { validationResult } = require('express-validator/check');
 
 exports.getLogin = (req, res, next) => {
     if (req.session && req.session.user) {
-        return req.session.destroy(() => {
-            return res.render('auth/login', {
-                pageTitle: "Login",
-                path: "/login",
-                oldData: {
-                    email: '',
-                    password: ''
-                },
-                errorMessage: '',
-                errors: []
-            });
-        })
+        return res.redirect('/');
+    }
+    let message = req.flash('sign-up-success');
+    if (message.length > 0) {
+        message = message[0]
+    }
+    else {
+        message = null
     }
     res.render('auth/login', {
         pageTitle: "Login",
@@ -26,8 +22,11 @@ exports.getLogin = (req, res, next) => {
             password: ''
         },
         errorMessage: '',
-        errors: []
+        errors: [],
+        signedUp: message,
     });
+    req.flash = null;
+
 }
 
 exports.postLogin = (req, res, next) => {
@@ -45,7 +44,8 @@ exports.postLogin = (req, res, next) => {
                 password: password
             },
             errorMessage: errors.array()[0].msg,
-            errors: errors.array()
+            errors: errors.array(),
+            signedUp: null,
         });
     }
 
@@ -60,7 +60,8 @@ exports.postLogin = (req, res, next) => {
                         password: password
                     },
                     errorMessage: 'User not found.! Please register your account',
-                    errors: [{ param: 'email' }]
+                    errors: [{ param: 'email' }],
+                    signedUp: null,
                 });
             }
 
@@ -76,17 +77,19 @@ exports.postLogin = (req, res, next) => {
                                 password: password
                             },
                             errorMessage: "Password doesn't match.! Please enter correct password",
-                            errors: [{ param: 'password' }]
+                            errors: [{ param: 'password' }],
+                            signedUp: null,
                         });
                     }
 
                     req.session.isLoggedIn = true;
                     req.session.user = fetchuser;
                     return req.session.save(() => {
-                        res.redirect('/');
-                    });
-
+                        req.flash('logged-in-success', `You are success logged in ${fetchuser.name}..`);
+                        return res.redirect('/');
+                    })
                 })
+
         })
         .catch(err => {
             const error = new Error(err);
@@ -98,20 +101,7 @@ exports.postLogin = (req, res, next) => {
 
 exports.getSignup = (req, res, next) => {
     if (req.session && req.session.user) {
-        return req.session.destroy(() => {
-            return res.render('auth/sign-up', {
-                pageTitle: "Sign Up",
-                path: "/sign-up",
-                oldData: {
-                    name: '',
-                    email: '',
-                    password: '',
-                    confirmPassword: ''
-                },
-                errorMessage: '',
-                errors: []
-            });
-        })
+        return res.redirect('/');
     }
     res.render('auth/sign-up', {
         pageTitle: "Sign Up",
@@ -165,7 +155,10 @@ exports.postSignup = (req, res, next) => {
             return user.save();
         })
         .then(result => {
-            res.redirect('/login');
+           return req.flash('sign-up-success', `Congratulation ${name}..! Thanks for Registering`);
+        })
+        .then(()=>{
+            return res.redirect('/login');
         })
         .catch(err => {
             const error = new Error(err);
@@ -253,7 +246,7 @@ exports.getNewPassword = (req, res, next) => {
                 },
                 errorMessage: '',
                 errors: [],
-                email:email
+                email: email
             });
         })
         .catch(err => {
@@ -281,7 +274,7 @@ exports.postNewPassword = (req, res, next) => {
             },
             errorMessage: errors.array()[0].msg,
             errors: errors.array(),
-            email:email
+            email: email
 
         });
     }

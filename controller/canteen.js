@@ -4,15 +4,24 @@ const Order = require("../models/order");
 
 exports.getIndex = (req, res, next) => {
     const search = req.query.search;
-
+    let message = req.flash('logged-in-success');
+    if (message.length > 0) {
+        message = message[0]
+    }
+    else {
+        message = null
+    }
     Food.find({ $or: [{ title: { $regex: search ? new RegExp(`^${search}`, 'i') : '' } }] })
         .then(foods => {
-            res.render("canteen/index", {
+            return res.render("canteen/index", {
                 pageTitle: "Canteen Management System",
                 path: '/',
                 foods: foods,
-                
+                loggedIn: message,
             });
+
+        }).then(() => {
+            req.flash = null;
         })
         .catch(err => {
             const error = new Error(err);
@@ -34,7 +43,7 @@ exports.getCart = (req, res, next) => {
                 path: '/cart',
                 foods: foods,
                 total: Math.round(total),
-                
+
             });
         })
         .catch(err => {
@@ -99,14 +108,14 @@ exports.postAddOrder = (req, res, next) => {
         .then(user => {
             fetchUser = user;
             const items = user.cart.items.map(f => {
-               
+
                 return {
                     ...f.foodId._doc,
                     quantity: f.quantity,
                 }
 
             });
-            const UpdatedUser = {_id:user._id,name:user.name}
+            const UpdatedUser = { _id: user._id, name: user.name }
             const customer = {
                 name: cname,
                 mobile_no: cmobile_no,
@@ -122,6 +131,7 @@ exports.postAddOrder = (req, res, next) => {
                 });
         })
         .then(result => {
+            req.flash('add-order', `Order Added successfully..! Please tell ${cname} that order is preparing`);
             res.redirect('/orders');
         })
         .catch(err => {
@@ -132,15 +142,19 @@ exports.postAddOrder = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
+    const addorder = req.flash('add-order')[0];
     Order.find()
         .then(orders => {
-            res.render("canteen/orders", {
+           return res.render("canteen/orders", {
                 pageTitle: "Orders",
                 path: '/orders',
                 orders: orders,
-                
+                addorder: addorder
             });
-        }) 
+        })
+        .then(()=>{
+            req.flash = null;
+        })
         .catch(err => {
             const error = new Error(err);
             error.httpStatusCode = 500;

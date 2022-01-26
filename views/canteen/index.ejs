@@ -2,20 +2,32 @@
   </head>
 
   <body>
+    <%  if(loggedIn){ %>
+   
+      <div class="flash">
+        <div class="flash__icon">
+          <i class="icon mdi mdi-check-circle-outline"></i>
+        </div>
+        <p class="flash__body">
+         <%= loggedIn %>
+        </p>
+      </div>
+    
+      <% } %>
     <div class="container-scroller">
 
       <%- include('../include/header.ejs');%>
 
-
+    
         <div class="container-fluid page-body-wrapper">
 
           <%- include('../include/side-bar.ejs'); %>
-
+        
             <!-- main -->
             <div class="main-panel">
               <div class="content-wrapper">
                 <div class="row">
-
+                 
                   <div class="tab-content tab-content-basic">
                     <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">
                       <div class="row">

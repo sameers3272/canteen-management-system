@@ -143,5 +143,11 @@
   // $('#navbar-search-icon').click(function () {
   //   $("#navbar-search-input").focus();
   // });
+ 
+    $( ".flash" ).addClass( "animate--drop-in-fade-out" );
+    setTimeout(function(){
+      $( ".flash" ).removeClass( "animate--drop-in-fade-out" );
+    }, 15000);
+ 
 
 })(jQuery);

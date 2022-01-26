@@ -29,3 +29,6 @@ togglePassword.addEventListener("click", function () {
   password.setAttribute("type", type);
 
 });
+
+
+

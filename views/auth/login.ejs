@@ -3,42 +3,53 @@
 	</head>
 
 	<body>
+		<% if(signedUp){ %>
 
-		<div class="user">
-			<header class="user__header">
-				<i class="mdi mdi-food-fork-drink menu-icon" style="font-size: 3rem;color: #fff;"></i>
-				<h1 class="user__title" style="font-size: 28px;">Canteen Management System</h1>
-				<h1 class="user__title pt-3" style="font-size: 25px;">Login</h1>
-			</header>
-			<% if (errorMessage) { %>
-				<div class="user-message user-message--error">
-					<%= errorMessage %>
+			<div class="flash">
+				<div class="flash__icon">
+					<i class="icon mdi mdi-check-circle-outline"></i>
 				</div>
-				<% } %>
-					<form class="form" action="/login" method="POST" novalidate>
-						<div class="form__group">
-							<input type="email" placeholder="Email" name="email" value="<%= oldData.email %>"
-								class="form__input <%= errors.find(e=>e.param === 'email')? 'invalid' : '' %>" />
-						</div>
+				<p class="flash__body">
+				 <%= signedUp%>
+				</p>
+			</div>
 
-						<div class="form__group  d-flex" style="align-items: center;">
-							<input type="password" placeholder="Password" name="password"
-								value="<%= oldData.password %>"
-								id="password"
-								class="form__input <%= errors.find(e=>e.param === 'password')?'invalid' : '' %>" />
-							<i class="mdi mdi-eye" id="password-icon"
-								style="position: absolute;right: 10px; font-size: 1.5rem;"></i>
+			<% } %>
+				<div class="user">
+					<header class="user__header">
+						<i class="mdi mdi-food-fork-drink menu-icon" style="font-size: 3rem;color: #fff;"></i>
+						<h1 class="user__title" style="font-size: 28px;">Canteen Management System</h1>
+						<h1 class="user__title pt-3" style="font-size: 25px;">Login</h1>
+					</header>
+					<% if (errorMessage) { %>
+						<div class="user-message user-message--error">
+							<%= errorMessage %>
 						</div>
-						<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+						<% } %>
 
-						<button class="btn" type="submit">Login</button>
-					</form>
-					<span id="wrapper" class="text-center pt-3">
-						<a class="button five" href="/sign-up">Have a account..? Create a new one</a>
-						<div class="pt-4">
-							<a class="button five" href="/reset">Forgot Password</a>
-						</div>
-					</span>
-		</div>
+							<form class="form" action="/login" method="POST" novalidate>
+								<div class="form__group">
+									<input type="email" placeholder="Email" name="email" value="<%= oldData.email %>"
+										class="form__input <%= errors.find(e=>e.param === 'email')? 'invalid' : '' %>" />
+								</div>
 
-		<%- include('../include/end.ejs')%>
+								<div class="form__group  d-flex" style="align-items: center;">
+									<input type="password" placeholder="Password" name="password"
+										value="<%= oldData.password %>" id="password"
+										class="form__input <%= errors.find(e=>e.param === 'password')?'invalid' : '' %>" />
+									<i class="mdi mdi-eye" id="password-icon"
+										style="position: absolute;right: 10px; font-size: 1.5rem;"></i>
+								</div>
+								<input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+								<button class="btn" type="submit">Login</button>
+							</form>
+							<span id="wrapper" class="text-center pt-3">
+								<a class="button five" href="/sign-up">Have a account..? Create a new one</a>
+								<div class="pt-4">
+									<a class="button five" href="/reset">Forgot Password</a>
+								</div>
+							</span>
+				</div>
+
+				<%- include('../include/end.ejs')%>

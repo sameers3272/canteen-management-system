@@ -4,17 +4,32 @@ const Food = require('../models/food');
 const User = require('../models/user');
 
 exports.getAllFood = (req, res, next) => {
-    const search = req.query.search;
     if (!req.user.admin) {
         return res.redirect('/');
     }
+    const search = req.query.search;
+
+    let addmessage = req.flash('food-add')[0];
+
+    let editmessage = req.flash('food-edit')[0];
+
+    let deletemessage = req.flash('food-delete')[0];
+
+    console.log(addmessage, editmessage);
     Food.find({ $or: [{ title: { $regex: search ? new RegExp(`^${search}`, 'i') : '' } }] })
         .then(foods => {
+
             res.render('admin/all-food', {
                 pageTitle: 'Admin All Foods',
                 path: '/admin/all-food',
                 foods: foods,
+                addmessage: addmessage,
+                editmessage: editmessage,
+                deletemessage: deletemessage
             });
+        })
+        .then(() => {
+            req.flash = null
         })
         .catch(err => {
             const error = new Error(err);
@@ -53,15 +68,10 @@ exports.postAddFood = (req, res, next) => {
         description: description,
         userId: req.user._id
     })
-    food.save()
-        .then(() => {
-            res.redirect('/admin/all-food');
-        })
-        .catch(err => {
-            const error = new Error(err);
-            error.httpStatusCode = 500;
-            return next(error);
-        })
+    return food.save(() => {
+        req.flash('food-add', 'Food Successfully Added..!')
+        return res.redirect('/admin/all-food');
+    })
 }
 
 
@@ -131,10 +141,6 @@ exports.postEditFood = (req, res, next) => {
 
     return Food.findById(foodId)
         .then(food => {
-            if (food.userId.toString() !== req.user._id.toString()) {
-                return next(new Error('User is not authenticated..'));
-            }
-
             food.title = updatedTitle;
             if (updatedImage) {
                 deleteFile(food.image);
@@ -142,8 +148,9 @@ exports.postEditFood = (req, res, next) => {
             }
             food.price = updatedPrice.toFixed(2);
             food.description = updatedDescription;
-            return food.save(result => {
-                res.redirect('/admin/all-food');
+            food.save(() => {
+                req.flash('food-edit', 'Food successfully Updated..!');
+                return res.redirect('/admin/all-food');
             })
         })
         .catch(err => {
@@ -155,7 +162,7 @@ exports.postEditFood = (req, res, next) => {
 
 exports.postDeleteFood = (req, res, next) => {
     const foodId = req.params.id;
-   
+
     Food.findByIdAndDelete(foodId)
         .then(food => {
             deleteFile(food.image);
@@ -171,7 +178,8 @@ exports.postDeleteFood = (req, res, next) => {
             })
         })
         .then(result => {
-            res.redirect('/admin/all-food');
+            req.flash('food-delete', 'Food Successfully Deleted..!');
+            return res.redirect('/admin/all-food');
         })
         .catch(err => {
             const error = new Error(err);

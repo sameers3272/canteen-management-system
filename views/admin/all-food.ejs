@@ -2,6 +2,42 @@
   </head>
 
   <body>
+    <% if(addmessage){ %>
+
+			<div class="flash">
+				<div class="flash__icon">
+					<i class="icon mdi mdi-check-circle-outline"></i>
+				</div>
+				<p class="flash__body">
+				  <%= addmessage %>
+				</p>
+			</div>
+
+			<% } %>
+      <% if(editmessage){ %>
+
+        <div class="flash">
+          <div class="flash__icon">
+            <i class="icon mdi mdi-check-circle-outline"></i>
+          </div>
+          <p class="flash__body">
+            <%= editmessage %>
+          </p>
+        </div>
+  
+        <% } %>
+        <% if(deletemessage){ %>
+
+          <div class="flash">
+            <div class="flash__icon">
+              <i class="icon mdi mdi-check-circle-outline"></i>
+            </div>
+            <p class="flash__body">
+              <%= deletemessage %>
+            </p>
+          </div>
+    
+          <% } %>
     <div class="container-scroller">
 
       <%- include('../include/header.ejs');%>

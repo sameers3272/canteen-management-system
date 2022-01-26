@@ -9,6 +9,7 @@ const MONGODB_URI = require('./util/database');
 const csrf = require('csurf');
 const helmet = require('helmet');
 const compression = require('compression');
+const flash = require('connect-flash');
 
 const adminRoutes = require('./routes/admin');
 const canteenRoutes = require('./routes/canteen');
@@ -54,6 +55,7 @@ app.use(session({ secret: 'my secret', resave: false, saveUninitialized: false, 
 app.use(helmet());
 app.use(compression());
 app.use(csrfProtection);
+app.use(flash());
 
 
 app.use((req, res, next) => {

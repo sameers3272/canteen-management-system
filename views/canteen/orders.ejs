@@ -2,6 +2,18 @@
   </head>
 
   <body>
+    <% if(addorder){ %>
+
+			<div class="flash">
+				<div class="flash__icon">
+					<i class="icon mdi mdi-check-circle-outline"></i>
+				</div>
+				<p class="flash__body">
+				 <%= addorder %>
+				</p>
+			</div>
+
+			<% } %>
     <div class="container-scroller">
 
       <%- include('../include/header.ejs');%>
