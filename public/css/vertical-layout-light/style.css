@@ -41304,3 +41304,17 @@ span.middle:hover:before {
   -o-animation: drop-in-fade-out 3.5s 0.4s cubic-bezier(0.32, 1.75, 0.65, 0.91);
   animation: drop-in-fade-out 3.5s 0.4s cubic-bezier(0.32, 1.75, 0.65, 0.91);
 }
+
+
+.desc{
+  white-space: nowrap; 
+  width: 300px; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
+
+@media screen and (max-width:991px) {
+  .desc{
+    width: 200px;
+  }
+}

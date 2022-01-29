@@ -149,5 +149,7 @@
       $( ".flash" ).removeClass( "animate--drop-in-fade-out" );
     }, 15000);
  
-
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
 })(jQuery);

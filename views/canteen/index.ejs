@@ -40,19 +40,17 @@
                                   <table class="table  text-center">
                                     <thead>
                                       <tr>
-                                        <th>
+                                        <th style="width: 30%;">
                                           Title
                                         </th>
-                                        <th>
-                                          Image
-                                        </th>
-                                        <th>
+                                    
+                                        <th style="width: 15%;">
                                           Price
                                         </th>
-                                        <th>
+                                        <th  style="width: 30%;">
                                           Description
                                         </th>
-                                        <th>
+                                        <th style="width: 15%;">
 
                                         </th>
                                       </tr>
@@ -64,15 +62,14 @@
                                           <td class="py-1">
                                             <%= food.title %>
                                           </td>
-                                          <td>
-                                            <img src="/<%=food.image%>" style="width: 100px;height: 100px;"
-                                              alt="<%=food.title %>" srcset="">
-                                          </td>
+                            
                                           <td>
                                             <%= food.price %>
                                           </td>
-                                          <td>
-                                            <%= food.description %>
+                                          <td >
+                                            <div class="desc" data-toggle="tooltip" data-placement="bottom" title="<%= food.description %>">
+                                              <%= food.description %> 
+                                            </div>
                                           </td>
                                           <td>
                                             <form action="/add-to-cart/<%=food._id %>" method="post">

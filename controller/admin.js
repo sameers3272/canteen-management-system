@@ -15,7 +15,6 @@ exports.getAllFood = (req, res, next) => {
 
     let deletemessage = req.flash('food-delete')[0];
 
-    console.log(addmessage, editmessage);
     Food.find({ $or: [{ title: { $regex: search ? new RegExp(`^${search}`, 'i') : '' } }] })
         .then(foods => {
 
@@ -58,13 +57,11 @@ exports.getAddFood = (req, res, next) => {
 
 exports.postAddFood = (req, res, next) => {
     const title = req.body.title;
-    const image = req.file;
     const price = +req.body.price;
     const description = req.body.description;
     const food = new Food({
         title: title,
         price: price.toFixed(2),
-        image: image.path,
         description: description,
         userId: req.user._id
     })
@@ -115,7 +112,6 @@ exports.getEditFood = (req, res, next) => {
 exports.postEditFood = (req, res, next) => {
     const foodId = req.body.foodId;
     const updatedTitle = req.body.title;
-    const updatedImage = req.file;
     const updatedPrice = +req.body.price;
     const updatedDescription = req.body.description;
     const errors = validationResult(req);
@@ -142,10 +138,7 @@ exports.postEditFood = (req, res, next) => {
     return Food.findById(foodId)
         .then(food => {
             food.title = updatedTitle;
-            if (updatedImage) {
-                deleteFile(food.image);
-                food.image = updatedImage.path;
-            }
+           
             food.price = updatedPrice.toFixed(2);
             food.description = updatedDescription;
             food.save(() => {
@@ -165,7 +158,6 @@ exports.postDeleteFood = (req, res, next) => {
 
     Food.findByIdAndDelete(foodId)
         .then(food => {
-            deleteFile(food.image);
             return User.find();
         })
         .then(users => {

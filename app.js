@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const Mongodb_Store = require('connect-mongodb-session')(session);
-const multer = require('multer');
 const MONGODB_URI = require('./util/database');
 const csrf = require('csurf');
 const helmet = require('helmet');
@@ -25,23 +24,7 @@ const store = new Mongodb_Store({
     uri: MONGODB_URI
 });
 
-const fileStorage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'images');
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + "-" + file.originalname);
-    }
-})
 
-const fileFilter = (req, file, cb) => {
-    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
-        cb(null, true);
-    }
-    else {
-        cb(null, false);
-    }
-}
 
 
 app.set('view engine', 'ejs');
@@ -50,7 +33,6 @@ app.set('views', 'views');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'))
 app.use(session({ secret: 'my secret', resave: false, saveUninitialized: false, store: store }));
 app.use(helmet());
 app.use(compression());
